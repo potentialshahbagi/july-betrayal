@@ -1,48 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Rose on Face</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hit the shoe</title>
     <style>
-        .container {
-            position: relative;
-            width: 300px;
-            margin: auto;
-            text-align: center;
-        }
-        .human {
-            width: 100%;
-            display: block;
-        }
-        .rose {
-            position: absolute;
-            width: 50px;
-            top: 50px; /* Adjust as needed */
-            right: 10px; /* Initially on right side */
-            transition: all 0.5s ease-in-out;
-        }
-        .btn {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+      }
+      .sidebar {
+        width: 350px;
+        background: #f4f4f4;
+        padding: 10px;
+        overflow-y: auto;
+      }
+      .sidebar div {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .sidebar img {
+        width: 100%;
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+      .sidebar img:hover,
+      .sidebar img.selected {
+        border: 2px solid blue;
+      }
+      .main-content {
+        flex-grow: 1;
+        position: relative;
+      }
+      .human {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .shoe {
+        position: absolute;
+        width: 400px;
+        top: 50px;
+        right: 10px;
+        transition: all 0.5s ease-in-out;
+      }
+      .btn {
+        background: #ff0000;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      .caption {
+        font-size: 14px;
+        margin-top: 5px;
+      }
+      .hit-count {
+        font-size: 12px;
+        color: gray;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <img src="https://cdn.daily-sun.com/public/news_images/2024/10/29/1730186420-5020be1c0f9edff90ce016028ecb4261.jpg" alt="Human" class="human">
-        <img src="https://bi.fbcd.co/posts/add-shading-and-texture-shoe-clipart-63e7842213c2f898515437.jpg" alt="Rose" class="rose" id="rose">
-        <button class="btn" onclick="placeRose()">Place Rose</button>
+      <div class="sidebar" id="sidebar">
+        <div onclick="changePhoto('asif-nazrul.jpg', this, 'asifNazrul')">
+          <img src="asif-nazrul.jpg" alt="asif nazrul" />
+          <div class="caption">
+            <h3>প্রথম আলোর দালাল</h3>
+            প্রথমা প্রকাশনী থেকে বই প্রকাশ করেছে<br />
+            শহীদ পরিবারের সাথে বেয়াদবি করা সহ ধমক দিয়ে কথা বলেছে
+          </div>
+          <div class="hit-count" id="asifNazrul-count">Hits: 0</div>
+        </div>
+        <div onclick="changePhoto('shofiq.jpg', this, 'shofiq')">
+          <img src="shofiq.jpg" alt="Shofiq" />
+          <div class="caption">
+            <h3>প্রথম আলোর দালাল</h3>
+            প্রথম আলোর অফিসে গিয়ে পা চেটেছে, জঙ্গী নাটক বানানোর প্রমান পাওয়ার
+            পরেও প্রথম আলোর সুনাম করেছে
+          </div>
+          <div class="hit-count" id="shofiq-count">Hits: 0</div>
+        </div>
+        <div onclick="changePhoto('faruki.jpg', this, 'faruki')">
+          <img src="faruki.jpg" alt="faruki" />
+          <div class="caption">
+            <h3>আওয়ামীলীগের দোসর</h3>
+            প্রথম আলোর অফিসে গিয়ে পা চেটেছে<br />
+            ধানমন্ডী-৩২ আবার করে সাজাতে চেয়েছে
+          </div>
+          <div class="hit-count" id="faruki-count">Hits: 0</div>
+        </div>
+        <div onclick="changePhoto('asif-mahmud.jpg', this, 'asifMahmud')">
+          <img src="asif-mahmud.jpg" alt="asif-mahmud" />
+          <div class="caption">
+            <h3>বেঈমান</h3>
+            জুলাই আন্দোলনের স্লোগান বিকৃতি করেছে<br />
+            প্রথম আলোর পা চেটে প্রথমা প্রকাশনী থেকে বই প্রকাশ করেছে
+          </div>
+          <div class="hit-count" id="asifMahmud-count">Hits: 0</div>
+        </div>
+      </div>
+      <div class="main-content">
+        <img
+          src="asif-nazrul.jpg"
+          alt="asif-nazrul"
+          class="human"
+          id="mainImage"
+        />
+        <img src="shoe.png" alt="shoe" class="shoe" id="shoe" />
+        <button class="btn" onclick="placeShoe()">Hit</button>
+        <audio id="sound" src="sound.mp3" preload="auto"></audio>
+      </div>
     </div>
 
     <script>
-        function placeRose() {
-            let rose = document.getElementById('rose');
-            rose.style.right = '50%';
-            rose.style.transform = 'translateX(50%)';
+      let hitCounts = JSON.parse(localStorage.getItem("hitCounts")) || {
+        asifNazrul: 0,
+        shofiq: 0,
+        faruki: 0,
+        asifMahmud: 0,
+      };
+
+      function updateHitCountUI() {
+        for (let key in hitCounts) {
+          document.getElementById(key + "-count").innerText =
+            "Hits: " + hitCounts[key];
         }
+      }
+
+      function placeShoe() {
+        let shoe = document.getElementById("shoe");
+        shoe.style.right = "50%";
+        shoe.style.top = "50%";
+        shoe.style.transform = "translate(50%, -50%)";
+
+        const sound = document.getElementById("sound");
+        sound.play();
+      }
+
+      function changePhoto(imageSrc, element, personKey) {
+        document.getElementById("mainImage").src = imageSrc;
+        let images = document.querySelectorAll(".sidebar img");
+        images.forEach((img) => img.classList.remove("selected"));
+        element.querySelector("img").classList.add("selected");
+
+        // Reset shoe position
+        let shoe = document.getElementById("shoe");
+        shoe.style.right = "10px";
+        shoe.style.top = "50px";
+        shoe.style.transform = "none";
+
+        // Update hit count
+        hitCounts[personKey]++;
+        localStorage.setItem("hitCounts", JSON.stringify(hitCounts));
+        updateHitCountUI();
+      }
+
+      // Initialize UI with stored hit counts
+      updateHitCountUI();
     </script>
-</body>
+  </body>
 </html>
